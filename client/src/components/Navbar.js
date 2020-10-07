@@ -1,8 +1,7 @@
 import React, {useContext} from "react"
 import {useHistory} from "react-router-dom"
 import {AuthContext} from "../context/AuthContext";
-import 'material-design-icons'
-
+import "./Navbar.css"
 
 export const Navbar = () => {
 
@@ -15,12 +14,16 @@ export const Navbar = () => {
         history.push("/")
     }
 
-    return(
+    return (
         <nav>
             <div className="nav-wrapper">
-                <span className="brand-logo"><i className="material-icons">cloud</i>Auth manger</span>
+                <span className="brand-logo logo"><i className="material-icons">cloud</i>Auth manger</span>
                 <ul className="right hide-on-med-and-down">
-                    <li><a href="/" onClick={logoutHandler}><i className="material-icons">exit_to_app</i></a></li>
+                    <li>
+                        <a className="logout-btn" href="/" onClick={logoutHandler}>
+                            <i className="material-icons center">exit_to_app</i>
+                        </a>
+                    </li>
                 </ul>
             </div>
         </nav>
