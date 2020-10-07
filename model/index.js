@@ -1,4 +1,4 @@
-const {Sequelize,DataTypes} = require('sequelize')
+const {Sequelize, DataTypes} = require('sequelize')
 const config = require('config');
 
 const sequelize = new Sequelize(
@@ -8,11 +8,19 @@ const sequelize = new Sequelize(
     {
         dialect: 'postgres',
     },
-);
+)
 
-let User = require('./User')(sequelize,DataTypes);
+sequelize.sync({force: true})
+    .then(() => {
+        console.log("Sequelize synced ...")
+        })
+    .catch(error => {
+        console.log("Error",error)
+    })
 
-module.exports ={
+const User = require('./User')(sequelize, DataTypes);
+
+module.exports = {
     User,
     sequelize,
 }

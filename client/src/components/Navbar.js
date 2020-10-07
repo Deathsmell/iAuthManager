@@ -20,7 +20,7 @@ export const Navbar = () => {
             <div className="nav-wrapper">
                 <span className="brand-logo"><i className="material-icons">cloud</i>Auth manger</span>
                 <ul className="right hide-on-med-and-down">
-                    <li><a href="/" onClick={logoutHandler}><i className="material-icons">exit</i></a></li>
+                    <li><a href="/" onClick={logoutHandler}><i className="material-icons">exit_to_app</i></a></li>
                 </ul>
             </div>
         </nav>
