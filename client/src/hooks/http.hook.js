@@ -23,6 +23,7 @@ export const useHttp = () => {
             if (!response.ok) {
                 throw new Error(data.message || "useHttp response error")
             }
+            setLoading(false)
             return data
         } catch (e) {
             setLoading(false)

@@ -35,7 +35,7 @@ router.post('/registration',
             }
 
             const hashedPassword = await bcrypt.hash(password, 12);
-            return await User.create({email, password: hashedPassword}) // !!!
+            return await User.create({email, password: hashedPassword, status: 'unblock',name:'unknown'}) // !!!
         } catch (e) {
             console.log(e.message);
             return res.status(500).json({message: 'Hasn\'t been authentication'})
@@ -74,8 +74,15 @@ router.post('/login',
                 return res.status(400).json({message: 'Email or password exist!'})
             }
 
+            const payload = {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                status: user.status
+            };
+
             const token = jwt.sign(
-                {userId: user.id},
+                payload,
                 config.get('jwtSecret'),
                 {expiresIn: '1h'}
             )

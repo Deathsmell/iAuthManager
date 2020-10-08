@@ -3,13 +3,10 @@ import {useSelect} from "../../hooks/select.hook"
 import UserToolbar from "./UserToolbar"
 import "./UserTable.css"
 
-const UserTable = ({users}) => {
-
-    const {selectRow, selectAll,selectedUser} = useSelect()
+const UserTable = ({users,selectRow, selectAll}) => {
 
     return (
         <div className="">
-            <UserToolbar selectedUser={selectedUser}/>
             <table className="highlight">
                 <thead>
                 <tr>
@@ -24,42 +21,47 @@ const UserTable = ({users}) => {
                             <span className="empty"/>
                         </label>
                     </th>
-                    {Object.keys(users[0]).map(fieldName => {
-                        return (
-                            <th key={fieldName}>
-                                {fieldName}
-                            </th>
-                        )
-                    })}
+                    {
+                        users.length && Object.keys(users[0]).map(fieldName => {
+                            return (
+                                <th key={fieldName}>
+                                    {fieldName}
+                                </th>
+                            )
+                        })
+                    }
                 </tr>
                 </thead>
                 <tbody>
-                {users.map((user, index) => {
-                    return (
-                        <tr
-                            key={index}
-                        >
-                            <td
-                                className="checkbox-collum"
+                {
+                    users.map((user, index) => {
+                        return (
+                            <tr
+                                key={index}
                             >
-                                <label htmlFor={user.name}>
-                                    <input type="checkbox"
-                                           className="filled-in checkbox-pink"
-                                           id={user.name}
-                                           key={user.name}
-                                           value={user.name}
-                                           onClick={selectRow}
-                                    />
-                                    <span className="empty"/>
-                                </label>
-                            </td>
-                            {Object.values(user).map(value => {
-                                return (
-                                    <td key={`${value}-${index}`}>{value}</td>
-                                )
-                            })}
-                        </tr>)
-                })}
+                                <td
+                                    className="checkbox-collum"
+                                >
+                                    <label htmlFor={user.id}>
+                                        <input type="checkbox"
+                                               className="filled-in checkbox-pink"
+                                               id={user.id}
+                                               value={user.id}
+                                               onClick={selectRow}
+                                        />
+                                        <span className="empty"/>
+                                    </label>
+                                </td>
+                                {
+                                    Object.values(user).map((value, index) => {
+                                        return (
+                                            <td key={`${value}-${index}-${user.name}`}>{value}</td>
+                                        )
+                                    })
+                                }
+                            </tr>)
+                    })
+                }
                 </tbody>
             </table>
         </div>

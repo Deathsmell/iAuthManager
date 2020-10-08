@@ -10,17 +10,23 @@ const sequelize = new Sequelize(
     },
 )
 
-sequelize.sync({force: true})
-    .then(() => {
-        console.log("Sequelize synced ...")
+const syncSequelize = (sync) => {
+    sequelize.sync({force: sync})
+        .then(() => {
+            console.log("Sequelize synced ...")
         })
-    .catch(error => {
-        console.log("Error",error)
-    })
+        .catch(error => {
+            console.log("Error",error)
+        })
+}
+
+
+
 
 const User = require('./User')(sequelize, DataTypes);
 
 module.exports = {
     User,
     sequelize,
+    syncSequelize
 }

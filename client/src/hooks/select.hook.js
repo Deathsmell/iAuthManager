@@ -6,12 +6,16 @@ export const useSelect = () => {
     const [selectedUser, setSelectedUser] = useState([]);
 
     const selectRow = (event) => {
-        const target = event.target;
+        const target = event.target
+        const targetId = typeof target.value === "string"
+            ? Number(target.value)
+            : target.value
         if (target && target.checked) {
-            setSelectedUser(selectedUser.concat(users.find(user => user.name === target.value)))
+            const changedUsers = users.filter(user => user.id === targetId);
+            setSelectedUser(selectedUser.concat(changedUsers))
         }
         if (target && !target.checked) {
-            setSelectedUser(selectedUser.filter(user => user.name !== target.value))
+            setSelectedUser(selectedUser.filter(user => user.id !== targetId))
         }
     }
 
@@ -20,16 +24,20 @@ export const useSelect = () => {
         if (target && target.checked) {
             setSelectedUser([].concat(users))
             users.forEach(user => {
-                document.getElementById(user.name).checked = true
+                document.getElementById(user.id).checked = true
             })
         }
         if (target && !target.checked) {
             setSelectedUser([])
             users.forEach(user => {
-                document.getElementById(user.name).checked = false
+                document.getElementById(user.id).checked = false
             })
         }
     }
 
-    return {selectAll: selectAll, selectRow: selectRow, selectedUser}
+    const cleanSelect = () => {
+        setSelectedUser([])
+    }
+
+    return {selectedUser, selectAll, selectRow, cleanSelect}
 }
