@@ -27,25 +27,20 @@ export const useAuth = () => {
         if (!isAuthenticated && token){
             request('api/auth','POST',null,{Authorization: `Bearer ${token}`})
                 .then(resp => {
-                    console.log(resp)
                     if (!!resp.isAuthenticated){
                         setAuthenticate(true)
                     } else {
                         localStorage.removeItem("token")
                     }
-                }).catch(reason => {
-                console.log(reason);
-            })
+                })
+                .catch(console.error)
         }
     },[isAuthenticated,token])
 
     useEffect(() => {
         const storageToken = localStorage.getItem("token") || null
         const storageUserId = localStorage.getItem("userId") || null
-        console.log("Auto login checking")
-
         if (!token && !userId){
-            console.log("Auto login start")
             login(storageToken, storageUserId)
         }
     })

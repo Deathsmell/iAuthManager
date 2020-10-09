@@ -12,7 +12,6 @@ export const useSelect = () => {
 
     const setChecked = useCallback((boolean) => {
         return (id) => {
-            console.log(`setCheck ${id} on ${boolean}`)
             const elementById = document.getElementById(id.id ? id.id : "all");
             if (elementById) {
                 elementById.checked = boolean
@@ -32,7 +31,6 @@ export const useSelect = () => {
     }
 
     const selectAll = ({target}) => {
-        console.log('Select all', target.checked)
         if (target.checked) {
             setSelectedUser([].concat(users))
             setCheckedAll(true)

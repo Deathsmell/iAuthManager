@@ -11,20 +11,12 @@ const ListUsers = () => {
     const manager = useManage();
     const {getUsers} = manager
     const selector = useState([]);
-
     const {token} = useContext(AuthContext);
     const [users, setUsers] = useState([])
 
-
     useEffect(() => {
-        if (token) {
-            setUsers(getUsers(setUsers))
-        }
+        if (token) setUsers(getUsers(setUsers))
     }, [token])
-
-    useEffect(() => {
-        console.log("Rerender list users")
-    }, [])
 
     return (
         <div>
@@ -33,13 +25,14 @@ const ListUsers = () => {
                     <UserToolbar
                         manager={manager}
                     />
-                    {users.length
-                        ? <UserTable
-                            users={users}
-                        />
-                        : <div className="center" style={{marginTop: "5rem"}}>
-                            <h3>Whatever was crashed in your code, cheer up!</h3>
-                        </div>
+                    {
+                        users.length
+                            ? <UserTable
+                                users={users}
+                            />
+                            : <div className="center" style={{marginTop: "5rem"}}>
+                                <h3>Whatever was crashed in your code, cheer up!</h3>
+                            </div>
                     }
                 </SelectContext.Provider>
             </UserContext.Provider>

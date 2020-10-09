@@ -7,7 +7,6 @@ const isBlock = user => user && user.status && (user.status === "block")
 
 const UserToolbar = ({manager}) => {
 
-    console.log("Render toolbar")
     const [blocked, setBlocked] = useState(0)
     const [selectedUser] = useContext(SelectContext)
     const {cleanSelects} = useSelect()
@@ -25,7 +24,8 @@ const UserToolbar = ({manager}) => {
         return (async (e) => {
             e.preventDefault()
             await cleanSelects()
-            handler(selectedUser)
+            const response = await handler(selectedUser)
+            console.log(response)
         })
     }
 

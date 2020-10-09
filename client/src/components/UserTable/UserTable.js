@@ -6,9 +6,9 @@ const UserTable = ({users}) => {
 
     const {selectRow, selectAll} = useSelect()
 
-    useEffect(()=>{
+    useEffect(() => {
         console.log("Rerender table")
-    },[])
+    }, [])
 
 
     return (
@@ -40,10 +40,11 @@ const UserTable = ({users}) => {
                 </thead>
                 <tbody>
                 {
-                    users.map((user, index) => {
+                    users.map((user) => {
                         return (
                             <tr
-                                key={index}
+                                id={`user-tr-${user.id}`}
+                                key={`user-tr-${user.id}`}
                             >
                                 <td
                                     className="checkbox-collum"
@@ -59,9 +60,14 @@ const UserTable = ({users}) => {
                                     </label>
                                 </td>
                                 {
-                                    Object.values(user).map((value, index) => {
+                                    Object.entries(user).map(([fieldName,value], index) => {
                                         return (
-                                            <td key={`${value}-${index}-${user.name}`}>{value}</td>
+                                            <td
+                                                className={fieldName}
+                                                key={`${fieldName}-${index}-${value}`}
+                                            >
+                                                {value}
+                                            </td>
                                         )
                                     })
                                 }

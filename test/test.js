@@ -1,23 +1,10 @@
-const jwt = require('jsonwebtoken');
+users = [
+    {name: 'ad', id: 0},
+    {name: 'asd', id: 1},
+    {name: 'ewr', id: 2},
+    {name: 'zxc', id: 3},
+    {name: 'rey', id: 4},
+    {name: 'SADC', id: 5},
+]
 
-
-
-
-
-const createJwt = () => {
-    let user = {id: 12, email: "213"}
-    return jwt.sign(
-        {_id: user.id, email: user.email},
-        'deathsmellSecret',
-        {expiresIn: '1h'}
-    )
-}
-
-
-const checkUser = (jwtToken) => {
-    return jwt.verify(jwtToken,'deathsmellSecret')
-}
-
-let jwt1 = createJwt();
-let checkUser1 = checkUser(jwt1);
-console.log(checkUser1);
+Object.entries(users[0]).fin

@@ -36,13 +36,11 @@ const auth = (router) => {
     router.post('/login',
         async (req, res, next) => {
             passport.authenticate(
-                ['login','jwt'],
+                'login',
                 {session: false},
                 async (err, user, info) => {
                     try {
                         if (err || !user) {
-                            const error = new Error('An error occurred.')
-
                             return next(JSON.stringify(info))
                         }
 
@@ -83,7 +81,7 @@ const auth = (router) => {
                     console.log("USER",user,"USERS",users)
                     if (user && users) {
                         handler(users)
-                        return res.status(200)
+                        return res.status(200).json({message:"success"})
                     } else {
                         console.log(info)
                         return res.status(401).json(info)

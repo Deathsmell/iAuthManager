@@ -8,7 +8,6 @@ import 'materialize-css'
 
 
 function App() {
-    console.log("App mount")
     const {token, login, userId, logout, isAuthenticated} = useAuth()
     const routes = useRoutes(isAuthenticated)
 
