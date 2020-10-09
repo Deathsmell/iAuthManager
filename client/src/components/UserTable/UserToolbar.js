@@ -1,37 +1,31 @@
 import React, {useEffect, useState} from "react"
-import useManage from "../../hooks/manage.hook";
 import "./UserToolbar.css"
+import {useSelect} from "../../hooks/select.hook";
 
 const isBlock = user => user && user.status && (user.status === "block")
 
-const UserToolbar = ({selectedUser, cleanSelect}) => {
+const UserToolbar = ({selector,manager}) => {
 
-    const [blocked, setBlocked] = useState(0);
+    console.log("Render toolbar")
+    const [blocked, setBlocked] = useState(0)
+    const [selectedUser] = selector
+    const {cleanSelect} = useSelect(selector)
+    const {blockUsers, deleteUsers, unblockUsers} = manager
 
     useEffect(() => {
         setBlocked(selectedUser.filter(isBlock).length)
     }, [selectedUser])
 
-    const {blockUsers, deleteUsers, unblockUsers} = useManage();
+    useEffect(()=>{
+        console.log("RENDER")
+    },[])
 
-
-    const blockHandler = async (e) => {
-        e.preventDefault()
-        await blockUsers(selectedUser)
-        await cleanSelect()
-    }
-
-    const unblockHandler = async (e) => {
-        e.preventDefault()
-        await unblockUsers(selectedUser)
-        await cleanSelect()
-    }
-
-    const deleteHandler = async (e) => {
-        e.preventDefault()
-        console.log(deleteUsers);
-        await deleteUsers(selectedUser)
-        await cleanSelect()
+    const selectDo = (handler) => {
+        return (async (e) => {
+            e.preventDefault()
+            await cleanSelect()
+            handler(selectedUser)
+        })
     }
 
     return (
@@ -40,7 +34,7 @@ const UserToolbar = ({selectedUser, cleanSelect}) => {
                 <div className="card-action center">
                     <a className={"btn green ".concat(blocked ? " " : "disabled")}
                        href="/"
-                       onClick={unblockHandler}
+                       onClick={selectDo(unblockUsers)}
                     >
                         <i className="material-icons left">group_add</i>
                         Unblock {blocked > 1
@@ -49,7 +43,7 @@ const UserToolbar = ({selectedUser, cleanSelect}) => {
                     </a>
                     <a className={"btn yellow darken-2 ".concat(selectedUser.length ? " " : "disabled")}
                        href="/"
-                       onClick={blockHandler}
+                       onClick={selectDo(blockUsers)}
                     >
                         <i className="material-icons left">block</i>
                         Block {selectedUser.length !== blocked && selectedUser.length > 1
@@ -58,10 +52,19 @@ const UserToolbar = ({selectedUser, cleanSelect}) => {
                     </a>
                     <a className={"btn red lighten-1 ".concat(selectedUser.length ? " " : "disabled")}
                        href="/"
-                       onClick={deleteHandler}
+                       onClick={selectDo(deleteUsers)}
                     >
                         <i className="material-icons left">delete_forever</i>
                         Delete {selectedUser.length && selectedUser.length > 1
+                        ? ` (${selectedUser.length})`
+                        : ""}
+                    </a>
+                    <a className={"btn grey lighten-3 ".concat(selectedUser.length ? " " : "disabled")}
+                       href="/"
+                       onClick={selectDo(()=>{})}
+                    >
+                        <i className="material-icons left">clear_all</i>
+                        Clean {selectedUser.length
                         ? ` (${selectedUser.length})`
                         : ""}
                     </a>

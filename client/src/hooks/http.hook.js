@@ -7,7 +7,6 @@ export const useHttp = () => {
     const request = useCallback(async (url, method = 'GET', body = null, headers = {}) => {
         setLoading(true)
         try {
-
             if (body) {
                 body = JSON.stringify(body)
                 headers['Content-Type'] = 'application/json'
@@ -18,10 +17,18 @@ export const useHttp = () => {
                 body,
                 headers
             });
-            const data = await response.json()
+            console.log(response);
+            let data
+            try {
+                data = await response.json()
+            } catch (e) {
+                setLoading(false)
+                setError("Unsupported json")
+            }
 
             if (!response.ok) {
-                throw new Error(data.message || "useHttp response error")
+                setError(response.message || {message:"useHttp response error"})
+                setLoading(false)
             }
             setLoading(false)
             return data
@@ -32,7 +39,7 @@ export const useHttp = () => {
         }
     }, [])
 
-    const clearError = useCallback(() => setError(null),[])
+    const clearError = useCallback(() => setError(null), [])
 
     return {loading, error, request, clearError}
 }

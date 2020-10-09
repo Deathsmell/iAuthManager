@@ -1,20 +1,44 @@
 const express = require('express')
 const config = require('config')
-let {sequelize, syncSequelize} = require('./model');
+const {sequelize, syncSequelize} = require('./model')
+const {User} = require('./model')
+const session = require('express-session')
+const cookie = require('cookie-parser')
+const bodyparser = require('body-parser')
+const passport = require('passport')
+const {Router} = require('express')
+
 
 const app = express()
+const router = Router()
 const PORT = config.get('port') || 3000
 
-app.use(express.json())
-app.use('/api/auth', require('./routes/auth'));
-app.use('/api', require('./routes/users'));
+
+app.use(express.static("public"))
+app.use(bodyparser.json())
+app.use(bodyparser.urlencoded({extended: false}))
+app.use(passport.initialize())
+
+
+require('./routes')(router)
+require('./config/passport')(passport)
+
+
+
+app.use('/api', router)
+app.get('/logout', function(req, res){
+    req.logout();
+    res.redirect('/');
+});
+
+
 
 (start = async () => {
     try {
-        // await syncSequelize(true)
+        await syncSequelize(true)
         await sequelize.authenticate()
             .then(() => console.log("Db connected ..."))
-            .catch(err => console.log("Error",err))
+            .catch(err => console.log("Error", err))
 
         app.listen(PORT, () => {
             console.log(`App has been started on ${PORT}`)

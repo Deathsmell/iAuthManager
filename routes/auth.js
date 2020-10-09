@@ -1,97 +1,123 @@
-const {Router} = require('express')
-const bcrypt = require('bcrypt')
+const passport = require('passport')
+const {User} = require('../model')
 const jwt = require('jsonwebtoken')
 const config = require('config')
-const {User} = require('../model')
-const {check, validationResult} = require('express-validator')
-const router = Router()
 
-router.post('/registration',
-    [
-        check('email', 'Illegal email').isEmail(),
-        check('password', 'Password doesnt be empty').exists()
-    ],
-    async (req, res) => {
-        try {
+const auth = (router) => {
 
-            const errorsValidation = validationResult(req)
-
-            if (!errorsValidation.isEmpty()) {
-                return res.status(400).json({
-                    errors: errorsValidation.array(),
-                    message: "Illegal registration data",
-                })
+    router.post('/auth',async (req,res,next)=>{
+        passport.authenticate('jwt',{},async (err,user,info)=>{
+            if (err) console.log(err,info)
+            if (user){
+                res.status(200).json({isAuthenticated: true})
+            } else {
+                res.status(401).json({message:"Invalid jwt"})
             }
-
-            const {email, password} = req.body
-
-            const queryResult = await User.findOne({
-                where: {
-                    email
-                }
-            });
-            if (queryResult) {
-                return res.status(500).json({message: 'User exist! Pls input another email'})
-            }
-
-            const hashedPassword = await bcrypt.hash(password, 12);
-            return await User.create({email, password: hashedPassword, status: 'unblock',name:'unknown'}) // !!!
-        } catch (e) {
-            console.log(e.message);
-            return res.status(500).json({message: 'Hasn\'t been authentication'})
-        }
+        })(req,res,next)
     })
 
-router.post('/login',
-    [
-        check('email', 'Illegal email').isEmail(),
-        check('password', 'Password doesnt be empty').exists()
-    ],
-    async (req, res) => {
-        try {
-            const errorsValidation = validationResult(req)
-            if (!errorsValidation.isEmpty()) {
-                return res.status(400).json({
-                    errors: errorsValidation.array(),
-                    message: "Illegal logins data",
-                })
-            }
-            const {email, password} = req.body
-
-            const user = await User.findOne({
-                where: {
-                    email
-                }
-            });
-
-            if (user === null) {
-                return res.status(400).json({message: 'User not exist!'})
-            }
-
-            const isMatch = await bcrypt.compare(password, user.password);
-
-            if (!isMatch) {
-                return res.status(400).json({message: 'Email or password exist!'})
-            }
-
-            const payload = {
-                id: user.id,
-                name: user.name,
-                email: user.email,
-                status: user.status
-            };
-
-            const token = jwt.sign(
-                payload,
-                config.get('jwtSecret'),
-                {expiresIn: '1h'}
-            )
-
-            res.json({token, id: user.id})
-
-        } catch (e) {
-            return res.status(500).json({message: 'Hasn\'t been authentication'})
+    router.post('/signup',
+        async (req, res, next) => {
+            passport.authenticate(
+                'signup',
+                {
+                    session: false,
+                },
+                (err, token, info) => {
+                    if (token) {
+                        res.json(info)
+                    } else {
+                        res.status(401).json(info)
+                    }
+                })(req, res, next)
         }
-    })
+    )
 
-module.exports = router
+    router.post('/login',
+        async (req, res, next) => {
+            passport.authenticate(
+                ['login','jwt'],
+                {session: false},
+                async (err, user, info) => {
+                    try {
+                        if (err || !user) {
+                            const error = new Error('An error occurred.')
+
+                            return next(JSON.stringify(info))
+                        }
+
+                        req.login(
+                            user,
+                            {},
+                            async (error) => {
+                                if (error) return next("ERROR :", error)
+
+                                const token = jwt.sign(user, config.get('jwtSecret'))
+                                return res.json({token, id: user.id})
+                            }
+                        )
+                    } catch (error) {
+                        return next("ERROR2: ", error)
+                    }
+                }
+            )(req, res, next)
+        }
+    )
+
+    const changeStatus = async (id, status) => {
+        return await User.update({status}, {
+            where: {
+                id
+            }
+        })
+    }
+
+    const manageUsersCredential = (handler) => {
+        return (req, res, next) => {
+            return passport.authenticate(
+                'jwt',
+                {session: false},
+                async (err, user, info) => {
+                    if (err) return res.status(500).json(info)
+                    let users = req.body.users;
+                    console.log("USER",user,"USERS",users)
+                    if (user && users) {
+                        handler(users)
+                        return res.status(200)
+                    } else {
+                        console.log(info)
+                        return res.status(401).json(info)
+                    }
+                }
+            )(req, res, next)
+        }
+    }
+
+
+    router.post('/block', manageUsersCredential(async (users) => {
+            await users.forEach(user => {
+                changeStatus(user.id, "blocked")
+            })
+        })
+    )
+
+    router.post('/unblock', manageUsersCredential(async (users) => {
+            await users.forEach(user => {
+                changeStatus(user.id, "unblocked")
+            })
+        })
+    )
+
+    router.post('/delete', manageUsersCredential(async (users) => {
+            await users.forEach(user => {
+                User.destroy({
+                    where: {
+                        id: user.id
+                    }
+                })
+            })
+        })
+    )
+}
+
+module.exports = auth

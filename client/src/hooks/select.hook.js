@@ -1,9 +1,13 @@
-import {useState, useContext} from 'react'
+import {useContext} from 'react'
 import {UserContext} from "../context/UserContext";
 
-export const useSelect = () => {
-    const users = useContext(UserContext);
-    const [selectedUser, setSelectedUser] = useState([]);
+export const useSelect = (selector) => {
+    const users = useContext(UserContext)
+    const [selectedUser, setSelectedUser] = selector
+
+    const cleanSelect = () => {
+        setSelectedUser([])
+    }
 
     const selectRow = (event) => {
         const target = event.target
@@ -14,30 +18,25 @@ export const useSelect = () => {
             const changedUsers = users.filter(user => user.id === targetId);
             setSelectedUser(selectedUser.concat(changedUsers))
         }
-        if (target && !target.checked) {
+        if (target && !target.checked)
             setSelectedUser(selectedUser.filter(user => user.id !== targetId))
-        }
     }
 
-    const selectAll = (event) => {
-        const target = event.target;
-        if (target && target.checked) {
+    const setChecked = (boolean) => {
+        users.forEach(user => {
+            document.getElementById(user.id).checked = boolean
+        })
+    }
+
+    const selectAll = ({target}) => {
+        if (target.checked) {
             setSelectedUser([].concat(users))
-            users.forEach(user => {
-                document.getElementById(user.id).checked = true
-            })
-        }
-        if (target && !target.checked) {
-            setSelectedUser([])
-            users.forEach(user => {
-                document.getElementById(user.id).checked = false
-            })
+            setChecked(true)
+        } else {
+            cleanSelect()
+            setChecked(false)
         }
     }
 
-    const cleanSelect = () => {
-        setSelectedUser([])
-    }
-
-    return {selectedUser, selectAll, selectRow, cleanSelect}
+    return {selectAll, selectRow, cleanSelect}
 }

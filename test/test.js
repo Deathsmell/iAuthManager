@@ -5,16 +5,17 @@ const jwt = require('jsonwebtoken');
 
 
 const createJwt = () => {
+    let user = {id: 12, email: "213"}
     return jwt.sign(
-        {status: 'online'},
-        'secret',
+        {_id: user.id, email: user.email},
+        'deathsmellSecret',
         {expiresIn: '1h'}
     )
 }
 
 
 const checkUser = (jwtToken) => {
-    return jwt.verify(jwtToken,'secret')
+    return jwt.verify(jwtToken,'deathsmellSecret')
 }
 
 let jwt1 = createJwt();

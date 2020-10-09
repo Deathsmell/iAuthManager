@@ -1,9 +1,15 @@
-import React from "react";
-import {useSelect} from "../../hooks/select.hook"
-import UserToolbar from "./UserToolbar"
+import React, {useEffect} from "react";
 import "./UserTable.css"
+import {useSelect} from "../../hooks/select.hook";
 
-const UserTable = ({users,selectRow, selectAll}) => {
+const UserTable = ({users, selector}) => {
+
+    const {selectRow, selectAll} = useSelect(selector)
+
+    useEffect(()=>{
+        console.log("Rerender table")
+    },[])
+
 
     return (
         <div className="">
