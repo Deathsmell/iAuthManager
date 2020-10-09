@@ -1,12 +1,44 @@
-import {useContext} from 'react'
+import {useCallback, useContext, useEffect} from 'react'
 import {UserContext} from "../context/UserContext";
+import {SelectContext} from "../context/SelectContext";
 
-export const useSelect = (selector) => {
+export const useSelect = () => {
     const users = useContext(UserContext)
-    const [selectedUser, setSelectedUser] = selector
+    const [selectedUser, setSelectedUser] = useContext(SelectContext)
 
-    const cleanSelect = () => {
+    useEffect(() => {
+        setChecked(users && (selectedUser.length === users.length))('all')
+    }, [selectedUser, users])
+
+    const setChecked = useCallback((boolean) => {
+        return (id) => {
+            console.log(`setCheck ${id} on ${boolean}`)
+            const elementById = document.getElementById(id.id ? id.id : "all");
+            if (elementById) {
+                elementById.checked = boolean
+            }
+        }
+    }, [selectedUser])
+
+
+    const setCheckedAll = (boolean) => {
+        const checked = setChecked(boolean);
+        users.forEach(checked)
+    }
+
+    const cleanSelects = () => {
         setSelectedUser([])
+        setCheckedAll(false)
+    }
+
+    const selectAll = ({target}) => {
+        console.log('Select all', target.checked)
+        if (target.checked) {
+            setSelectedUser([].concat(users))
+            setCheckedAll(true)
+        } else {
+            cleanSelects()
+        }
     }
 
     const selectRow = (event) => {
@@ -22,21 +54,5 @@ export const useSelect = (selector) => {
             setSelectedUser(selectedUser.filter(user => user.id !== targetId))
     }
 
-    const setChecked = (boolean) => {
-        users.forEach(user => {
-            document.getElementById(user.id).checked = boolean
-        })
-    }
-
-    const selectAll = ({target}) => {
-        if (target.checked) {
-            setSelectedUser([].concat(users))
-            setChecked(true)
-        } else {
-            cleanSelect()
-            setChecked(false)
-        }
-    }
-
-    return {selectAll, selectRow, cleanSelect}
+    return {selectedUser, selectAll, selectRow, cleanSelects}
 }

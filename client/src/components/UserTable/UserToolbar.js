@@ -1,15 +1,16 @@
-import React, {useEffect, useState} from "react"
+import React, {useContext, useEffect, useState} from "react"
 import "./UserToolbar.css"
 import {useSelect} from "../../hooks/select.hook";
+import {SelectContext} from "../../context/SelectContext";
 
 const isBlock = user => user && user.status && (user.status === "block")
 
-const UserToolbar = ({selector,manager}) => {
+const UserToolbar = ({manager}) => {
 
     console.log("Render toolbar")
     const [blocked, setBlocked] = useState(0)
-    const [selectedUser] = selector
-    const {cleanSelect} = useSelect(selector)
+    const [selectedUser] = useContext(SelectContext)
+    const {cleanSelects} = useSelect()
     const {blockUsers, deleteUsers, unblockUsers} = manager
 
     useEffect(() => {
@@ -23,7 +24,7 @@ const UserToolbar = ({selector,manager}) => {
     const selectDo = (handler) => {
         return (async (e) => {
             e.preventDefault()
-            await cleanSelect()
+            await cleanSelects()
             handler(selectedUser)
         })
     }
@@ -61,7 +62,7 @@ const UserToolbar = ({selector,manager}) => {
                     </a>
                     <a className={"btn grey lighten-3 ".concat(selectedUser.length ? " " : "disabled")}
                        href="/"
-                       onClick={selectDo(()=>{})}
+                       onClick={selectDo(cleanSelects)}
                     >
                         <i className="material-icons left">clear_all</i>
                         Clean {selectedUser.length

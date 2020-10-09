@@ -2,9 +2,9 @@ import React, {useEffect} from "react";
 import "./UserTable.css"
 import {useSelect} from "../../hooks/select.hook";
 
-const UserTable = ({users, selector}) => {
+const UserTable = ({users}) => {
 
-    const {selectRow, selectAll} = useSelect(selector)
+    const {selectRow, selectAll} = useSelect()
 
     useEffect(()=>{
         console.log("Rerender table")

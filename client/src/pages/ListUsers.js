@@ -3,14 +3,13 @@ import UserTable from "../components/UserTable/UserTable"
 import UserToolbar from "../components/UserTable/UserToolbar"
 import useManage from "../hooks/manage.hook";
 import {UserContext} from "../context/UserContext";
-import {useHttp} from "../hooks/http.hook";
 import {AuthContext} from "../context/AuthContext";
+import {SelectContext} from "../context/SelectContext";
 
 const ListUsers = () => {
 
     const manager = useManage();
     const {getUsers} = manager
-
     const selector = useState([]);
 
     const {token} = useContext(AuthContext);
@@ -30,19 +29,19 @@ const ListUsers = () => {
     return (
         <div>
             <UserContext.Provider value={users}>
-                <UserToolbar
-                    selector={selector}
-                    manager={manager}
-                />
-                {users.length
-                    ? <UserTable
-                        selector={selector}
-                        users={users}
+                <SelectContext.Provider value={selector}>
+                    <UserToolbar
+                        manager={manager}
                     />
-                    : <div className="center" style={{marginTop: "5rem"}}>
-                        <h3>Никого нету</h3>
-                    </div>
-                }
+                    {users.length
+                        ? <UserTable
+                            users={users}
+                        />
+                        : <div className="center" style={{marginTop: "5rem"}}>
+                            <h3>Whatever was crashed in your code, cheer up!</h3>
+                        </div>
+                    }
+                </SelectContext.Provider>
             </UserContext.Provider>
         </div>
     )
