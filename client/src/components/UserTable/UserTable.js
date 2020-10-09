@@ -1,10 +1,12 @@
-import React, {useEffect} from "react";
-import "./UserTable.css"
+import React, {useContext, useEffect} from "react";
 import {useSelect} from "../../hooks/select.hook";
+import {UserContext} from "../../context/UserContext";
+import "./UserTable.css"
 
-const UserTable = ({users}) => {
+const UserTable = () => {
 
     const {selectRow, selectAll} = useSelect()
+    const [users] = useContext(UserContext);
 
     useEffect(() => {
         console.log("Rerender table")
@@ -13,7 +15,7 @@ const UserTable = ({users}) => {
 
     return (
         <div className="">
-            <table className="highlight">
+            {users.length && <table className="highlight">
                 <thead>
                 <tr>
                     <th className="checkbox-collum">
@@ -28,7 +30,7 @@ const UserTable = ({users}) => {
                         </label>
                     </th>
                     {
-                        users.length && Object.keys(users[0]).map(fieldName => {
+                        Object.keys(users[0]).map(fieldName => {
                             return (
                                 <th key={fieldName}>
                                     {fieldName}
@@ -60,7 +62,7 @@ const UserTable = ({users}) => {
                                     </label>
                                 </td>
                                 {
-                                    Object.entries(user).map(([fieldName,value], index) => {
+                                    Object.entries(user).map(([fieldName, value], index) => {
                                         return (
                                             <td
                                                 className={fieldName}
@@ -71,11 +73,13 @@ const UserTable = ({users}) => {
                                         )
                                     })
                                 }
-                            </tr>)
+                            </tr>
+                        )
                     })
                 }
                 </tbody>
             </table>
+            }
         </div>
     )
 }

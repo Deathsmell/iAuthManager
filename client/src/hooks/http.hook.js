@@ -26,7 +26,7 @@ export const useHttp = () => {
             }
 
             if (!response.ok) {
-                setError(response.message || {message:"useHttp response error"})
+                setError(response.message || {message: "useHttp response error"})
                 setLoading(false)
             }
             setLoading(false)

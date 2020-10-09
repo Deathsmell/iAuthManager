@@ -1,31 +1,31 @@
 import React, {useContext, useEffect, useState} from "react"
-import "./UserToolbar.css"
 import {useSelect} from "../../hooks/select.hook";
 import {SelectContext} from "../../context/SelectContext";
+import useManage from "../../hooks/manage.hook";
+import "./UserToolbar.css"
 
-const isBlock = user => user && user.status && (user.status === "block")
+const isBlock = user => user.status && (user.status === "blocked")
 
-const UserToolbar = ({manager}) => {
+const UserToolbar = () => {
 
+    const manager = useManage();
     const [blocked, setBlocked] = useState(0)
     const [selectedUser] = useContext(SelectContext)
     const {cleanSelects} = useSelect()
     const {blockUsers, deleteUsers, unblockUsers} = manager
 
     useEffect(() => {
-        setBlocked(selectedUser.filter(isBlock).length)
+        if (selectedUser && selectedUser.length)
+            setBlocked(selectedUser.filter(isBlock).length)
     }, [selectedUser])
 
-    useEffect(()=>{
-        console.log("RENDER")
-    },[])
 
     const selectDo = (handler) => {
         return (async (e) => {
             e.preventDefault()
             await cleanSelects()
-            const response = await handler(selectedUser)
-            console.log(response)
+            setBlocked(0)
+            await handler(selectedUser)
         })
     }
 
@@ -33,7 +33,7 @@ const UserToolbar = ({manager}) => {
         <div className="btn-group">
             <div>
                 <div className="card-action center">
-                    <a className={"btn green ".concat(blocked ? " " : "disabled")}
+                    <a className={"btn-large green ".concat(blocked ? " " : "disabled")}
                        href="/"
                        onClick={selectDo(unblockUsers)}
                     >
@@ -42,7 +42,7 @@ const UserToolbar = ({manager}) => {
                         ? ` (${blocked})`
                         : ""}
                     </a>
-                    <a className={"btn yellow darken-2 ".concat(selectedUser.length ? " " : "disabled")}
+                    <a className={"btn-large yellow darken-2 ".concat(selectedUser.length ? " " : "disabled")}
                        href="/"
                        onClick={selectDo(blockUsers)}
                     >
@@ -51,7 +51,7 @@ const UserToolbar = ({manager}) => {
                         ? ` (${selectedUser.length - blocked})`
                         : ""}
                     </a>
-                    <a className={"btn red lighten-1 ".concat(selectedUser.length ? " " : "disabled")}
+                    <a className={"btn-large red lighten-1 ".concat(selectedUser.length ? " " : "disabled")}
                        href="/"
                        onClick={selectDo(deleteUsers)}
                     >
@@ -60,7 +60,7 @@ const UserToolbar = ({manager}) => {
                         ? ` (${selectedUser.length})`
                         : ""}
                     </a>
-                    <a className={"btn grey lighten-3 ".concat(selectedUser.length ? " " : "disabled")}
+                    <a className={"btn-large grey lighten-1 ".concat(selectedUser.length ? " " : "disabled")}
                        href="/"
                        onClick={selectDo(cleanSelects)}
                     >

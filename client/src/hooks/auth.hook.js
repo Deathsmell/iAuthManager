@@ -9,20 +9,6 @@ export const useAuth = () => {
     const [userId, setUserId] = useState(null)
     const [isAuthenticated, setAuthenticate] = useState(false)
 
-    const login = useCallback((jwtToken, id) => {
-        setToken(jwtToken)
-        setUserId(id)
-        localStorage.setItem("userId", id)
-        localStorage.setItem("token", jwtToken)
-    }, [])
-
-    const logout = useCallback(() => {
-        setToken(null)
-        setUserId(null)
-        localStorage.removeItem("token")
-        localStorage.removeItem("userId")
-    }, [])
-
     useEffect(()=>{
         if (!isAuthenticated && token){
             request('api/auth','POST',null,{Authorization: `Bearer ${token}`})
@@ -37,13 +23,29 @@ export const useAuth = () => {
         }
     },[isAuthenticated,token])
 
+    const login = useCallback((jwtToken, id) => {
+        setToken(jwtToken)
+        setUserId(id)
+        localStorage.setItem("userId", id)
+        localStorage.setItem("token", jwtToken)
+    }, [])
+
+    const logout = useCallback(() => {
+        setToken(null)
+        setUserId(null)
+        localStorage.removeItem("token")
+        localStorage.removeItem("userId")
+    }, [])
+
+
+
     useEffect(() => {
         const storageToken = localStorage.getItem("token") || null
         const storageUserId = localStorage.getItem("userId") || null
         if (!token && !userId){
             login(storageToken, storageUserId)
         }
-    })
+    },[])
 
     return {token, userId, login, logout,isAuthenticated}
 

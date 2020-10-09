@@ -3,7 +3,7 @@ import {UserContext} from "../context/UserContext";
 import {SelectContext} from "../context/SelectContext";
 
 export const useSelect = () => {
-    const users = useContext(UserContext)
+    const [users] = useContext(UserContext)
     const [selectedUser, setSelectedUser] = useContext(SelectContext)
 
     useEffect(() => {

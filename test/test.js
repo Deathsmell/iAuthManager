@@ -1,10 +1,26 @@
-users = [
-    {name: 'ad', id: 0},
-    {name: 'asd', id: 1},
-    {name: 'ewr', id: 2},
-    {name: 'zxc', id: 3},
-    {name: 'rey', id: 4},
-    {name: 'SADC', id: 5},
-]
+const findTableRowById = (rowId) => {
+    if (rowId) return document.getElementById(`user-tr-${rowId}`)
+}
 
-Object.entries(users[0]).fin
+const removeUserRows = (removedUsers) => {
+    return (removedUsers.forEach(({id}) => {
+            findTableRowById(id).remove()
+        })
+    )
+}
+
+const changedStatus = (key, value) => {
+    return (users) => {
+        users.forEach(async ({id}) => {
+            const elementById = await findTableRowById(id)
+            if (elementById.childNodes) {
+                const childNodes = elementById.childNodes;
+                for (let i = 0; i < childNodes.length; i++) {
+                    if (childNodes.item(i).className === key) {
+                        childNodes.item(i).innerText = value
+                    }
+                }
+            }
+        })
+    }
+}
