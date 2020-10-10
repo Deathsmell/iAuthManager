@@ -37,10 +37,12 @@ if (process.env.NODE_ENV !== "production") {
 
 (start = async () => {
     try {
-        await syncSequelize(true)
-        await sequelize.authenticate()
-            .then(() => console.log("Db connected ..."))
-            .catch(err => console.log("Error", err))
+        if (process.env.DATABASE_URL === undefined){
+            await syncSequelize(true)
+            await sequelize.authenticate()
+                .then(() => console.log("Db connected ..."))
+                .catch(err => console.log("Error", err))
+        }
 
         app.listen(PORT, () => {
             console.log(`App has been started on ${PORT}`)
