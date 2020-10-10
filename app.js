@@ -9,7 +9,7 @@ const {Router} = require('express')
 
 const app = express()
 const router = Router()
-const PORT = config.get('port') || 3000
+const PORT = process.env.PORT || 3000
 const API = config.get('api') || 'api'
 
 app.use(express.static("public"))
@@ -26,8 +26,7 @@ app.get('/logout', (req, res) => {
     res.redirect('/');
 });
 
-console.log("MODE: " + process.env.NODE_ENV)
-if (process.env.NODE_ENV !== "production") {
+if (process.env.NODE_ENV === "production") {
     console.log("production")
     app.use('/', express.static(path.join(__dirname, 'client', 'build')))
     app.get('*', ((req, res) => {
