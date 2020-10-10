@@ -9,8 +9,6 @@ const UserTable = () => {
     const {selectRow, selectAll} = useSelect()
     const [users] = useContext(UserContext);
 
-
-
     return (
         <div className="">
             {users.length && <table className="highlight">

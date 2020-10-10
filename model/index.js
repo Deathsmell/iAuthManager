@@ -2,9 +2,7 @@ const {Sequelize, DataTypes} = require('sequelize')
 const config = require('config');
 
 const sequelize = new Sequelize(
-    config.get("database").database,
-    config.get("database").user,
-    config.get("database").password,
+    process.env.DATABASE_URL,
     {
         dialect: 'postgres',
     },
