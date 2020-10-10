@@ -36,7 +36,7 @@ if (process.env.NODE_ENV === "production") {
 
 (start = async () => {
     try {
-        if (process.env.DATABASE_URL === undefined){
+        if (process.env.DATABASE_URL !== undefined){
             await syncSequelize(true)
             await sequelize.authenticate()
                 .then(() => console.log("Db connected ..."))
