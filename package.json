@@ -5,9 +5,10 @@
   "license": "MIT",
   "scripts": {
     "start": "node app.js",
-    "server:prod": "nodemon node app.js",
-    "client:build": "yarn build --cwd ./client",
-    "dev": "cross-env \"NODE_ENV=development concurrently\" && \"yarn server\" \"yarn client\""
+    "server:dev": "nodemon node app.js",
+    "client:build": "yarn --cwd ./client build",
+    "client:start": "yarn --cwd ./client start ",
+    "dev": "concurrently \"yarn client:start\" \"yarn server:dev -cwd client\""
   },
   "dependencies": {
     "bcrypt": "^5.0.0",
