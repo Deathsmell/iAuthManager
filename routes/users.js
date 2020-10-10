@@ -13,11 +13,7 @@ const users = router => {
                 async (err, user, info) => {
                     if (user && user.status === UNBLOCK){
                         const users = await User.findAll({attributes: {exclude: ['password', 'updatedAt']}})
-                        const usersNew = await users.map((user) => {
-                            user.createdAt = moment(user.createdAt).format("hh:mm:ss MM-DD-YY");
-                            return user
-                        })
-                        return res.status(200).json(usersNew)
+                        return res.status(200).json(users)
                     } else {
                         return res.status(401).json(info)
                     }

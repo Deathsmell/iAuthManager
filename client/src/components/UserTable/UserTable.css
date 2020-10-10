@@ -2,6 +2,11 @@
     width: 10px;
 }
 
+td,th {
+    text-align: center;
+    font-size: 20px;
+}
+
 .empty{
     height: 15px;
 }

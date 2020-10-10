@@ -2,11 +2,14 @@ import React, {useContext} from "react";
 import {useSelect} from "../../hooks/select.hook";
 import {UserContext} from "../../context/UserContext";
 import "./UserTable.css"
+import UserCell from "./UserCell";
 
 const UserTable = () => {
 
     const {selectRow, selectAll} = useSelect()
     const [users] = useContext(UserContext);
+
+
 
     return (
         <div className="">
@@ -56,18 +59,7 @@ const UserTable = () => {
                                         <span className="empty"/>
                                     </label>
                                 </td>
-                                {
-                                    Object.entries(user).map(([fieldName, value], index) => {
-                                        return (
-                                            <td
-                                                className={fieldName}
-                                                key={`${fieldName}-${index}-${value}`}
-                                            >
-                                                {value}
-                                            </td>
-                                        )
-                                    })
-                                }
+                                <UserCell user={user}/>
                             </tr>
                         )
                     })

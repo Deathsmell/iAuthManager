@@ -27,7 +27,7 @@ app.get('/logout', (req, res) =>{
 
 (start = async () => {
     try {
-        // await syncSequelize(true)
+        await syncSequelize(true)
         await sequelize.authenticate()
             .then(() => console.log("Db connected ..."))
             .catch(err => console.log("Error", err))
