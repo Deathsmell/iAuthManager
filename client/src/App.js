@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React from 'react'
 import {BrowserRouter as Router} from "react-router-dom"
 import {useRoutes} from "./routes";
 import {useAuth} from "./hooks/auth.hook";
@@ -11,12 +11,6 @@ import './index.css'
 function App() {
     const {token, login, userId, logout, isAuthenticated} = useAuth()
     const routes = useRoutes(isAuthenticated)
-
-    useEffect(() => {
-        if (token === null) {
-            localStorage.removeItem("token")
-        }
-    }, [token])
 
     return (
         <AuthContext.Provider value={

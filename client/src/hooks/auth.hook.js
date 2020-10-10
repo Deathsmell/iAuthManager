@@ -31,6 +31,7 @@ export const useAuth = () => {
     }, [])
 
     const logout = useCallback(() => {
+        console.log("I remove TOKEN")
         setToken(null)
         setUserId(null)
         localStorage.removeItem("token")
@@ -40,9 +41,9 @@ export const useAuth = () => {
 
 
     useEffect(() => {
-        const storageToken = localStorage.getItem("token") || null
-        const storageUserId = localStorage.getItem("userId") || null
-        if (!token && !userId){
+        const storageToken = localStorage.getItem("token")
+        const storageUserId = localStorage.getItem("userId")
+        if (!token){
             login(storageToken, storageUserId)
         }
     },[login,token,userId])
