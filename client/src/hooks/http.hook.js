@@ -16,24 +16,23 @@ export const useHttp = () => {
                 method,
                 body,
                 headers
-            });
+            })
+
             let data
             try {
                 data = await response.json()
             } catch (e) {
-                setLoading(false)
-                setError("Unsupported json")
+                const error = data.message ? data.message : "Unsupported json"
+                setError(error)
             }
 
             if (!response.ok) {
-                setError(response.message || {message: "useHttp response error"})
-                setLoading(false)
+                setError(data.message || {message: "useHttp response error"})
             }
             setLoading(false)
             return data
         } catch (e) {
             setLoading(false)
-            setError(e.message)
             throw e
         }
     }, [])

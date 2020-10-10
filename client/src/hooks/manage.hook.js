@@ -1,4 +1,4 @@
-import {useContext, useEffect, useState} from "react";
+import {useCallback, useContext, useEffect, useState} from "react";
 import {useMessage} from "./message.hook";
 import {useHttp} from "./http.hook";
 import {AuthContext} from "../context/AuthContext";
@@ -9,12 +9,17 @@ const useManage = () => {
     const message = useMessage();
     const [change, setChange] = useState(false);
     const {token} = useContext(AuthContext);
-    const [_, setUsers] = useContext(UserContext);
+    const [, setUsers] = useContext(UserContext);
+
+
+    const getUsers = useCallback((setUsers) => request('api/users', 'GET', null, {Authorization: `Bearer ${token}`})
+        .then(setUsers)
+        .catch(() => setUsers([])),[request,token])
 
 
     useEffect(() => {
         if (token) setUsers(getUsers(setUsers))
-    }, [token, change])
+    }, [token, change, setUsers,getUsers])
 
 
     const requestToServer = async (action, users) => {
@@ -30,9 +35,7 @@ const useManage = () => {
         }
     }
 
-    const getUsers = (setUsers) => request('api/users', 'GET', null, {Authorization: `Bearer ${token}`})
-        .then(setUsers)
-        .catch(() => setUsers([]))
+
 
 
     const blockUsers = async (unblockedUsers) => {

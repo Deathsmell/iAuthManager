@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from "react";
+import React, {useContext} from "react";
 import {useSelect} from "../../hooks/select.hook";
 import {UserContext} from "../../context/UserContext";
 import "./UserTable.css"
@@ -7,11 +7,6 @@ const UserTable = () => {
 
     const {selectRow, selectAll} = useSelect()
     const [users] = useContext(UserContext);
-
-    useEffect(() => {
-        console.log("Rerender table")
-    }, [])
-
 
     return (
         <div className="">

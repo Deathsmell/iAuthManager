@@ -8,5 +8,11 @@
     "user": "deathsmell",
     "password": "123",
     "database": "iauthmanager"
-  }
+  },
+  "dataFormat": "hh:mm:ss MM-DD-YY",
+  "status": {
+    "block": "blocked",
+    "unblock": "unblocked"
+  },
+  "api": "api"
 }

@@ -6,9 +6,7 @@ export const useSelect = () => {
     const [users] = useContext(UserContext)
     const [selectedUser, setSelectedUser] = useContext(SelectContext)
 
-    useEffect(() => {
-        setChecked(users && (selectedUser.length === users.length))('all')
-    }, [selectedUser, users])
+
 
     const setChecked = useCallback((boolean) => {
         return (id) => {
@@ -17,8 +15,11 @@ export const useSelect = () => {
                 elementById.checked = boolean
             }
         }
-    }, [selectedUser])
+    }, [])
 
+    useEffect(() => {
+        setChecked(users && (selectedUser.length === users.length))('all')
+    }, [selectedUser, users, setChecked])
 
     const setCheckedAll = (boolean) => {
         const checked = setChecked(boolean);

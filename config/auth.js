@@ -1,10 +1,10 @@
 const LocalStrategy = require('passport-local').Strategy;
 const {User} = require("../model");
 const bcrypt = require('bcrypt')
-const jwt = require("jsonwebtoken")
 const config = require('config')
 const JwtStrategy = require('passport-jwt').Strategy
 const ExtractJwt = require('passport-jwt').ExtractJwt
+const UNBLOCK = config.get("status").unblock || "unblock"
 
 
 const signUp = new LocalStrategy(
@@ -32,7 +32,7 @@ const login = new LocalStrategy(
             return done(null, false, {message: 'User not found'});
         }
 
-        if (user.status && user.status !== 'unblocked') {
+        if (user.status && user.status !== UNBLOCK) {
             return done(null, false, {message: 'User blocked'});
         }
 
@@ -55,10 +55,9 @@ const jwtStrategy = new JwtStrategy(
     async (jwt_payload, done) => {
         try {
             const user = await User.findOne({where: {id: jwt_payload.id}});
-            if (user && user.status === 'unblocked') {
+            if (user && user.status === UNBLOCK) {
                 done(null, user)
             } else {
-                console.log("Auth by created date: ",user.createdAt === jwt_payload.createdAt)
                 done(null, false,{message: 'Not found or blocked'})
             }
         } catch (e) {

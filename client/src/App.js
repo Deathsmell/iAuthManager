@@ -5,6 +5,7 @@ import {useAuth} from "./hooks/auth.hook";
 import {AuthContext} from "./context/AuthContext";
 import {Navbar} from "./components/Navbar";
 import 'materialize-css'
+import './index.css'
 
 
 function App() {
@@ -22,8 +23,8 @@ function App() {
             {token, logout, login, userId, isAuthenticated}
         }>
             <Router>
-                {isAuthenticated && <Navbar/>}
-                <div>
+                <div className="fullscreen cyan lighten-5 row">
+                    {isAuthenticated && <Navbar/>}
                     {routes}
                 </div>
             </Router>

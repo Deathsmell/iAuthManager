@@ -21,7 +21,7 @@ export const useAuth = () => {
                 })
                 .catch(console.error)
         }
-    },[isAuthenticated,token])
+    },[isAuthenticated,token,request])
 
     const login = useCallback((jwtToken, id) => {
         setToken(jwtToken)
@@ -45,7 +45,7 @@ export const useAuth = () => {
         if (!token && !userId){
             login(storageToken, storageUserId)
         }
-    },[])
+    },[login,token,userId])
 
     return {token, userId, login, logout,isAuthenticated}
 

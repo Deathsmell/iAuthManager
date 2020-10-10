@@ -37,18 +37,20 @@ const auth = (router) => {
         async (req, res, next) => {
             passport.authenticate(
                 'login',
-                {session: false},
+                {
+                    session: false,
+                },
                 async (err, user, info) => {
                     try {
                         if (err || !user) {
-                            return next(JSON.stringify(info))
+                            return res.status(401).json(info)
                         }
 
                         req.login(
                             user,
                             {},
                             async (error) => {
-                                if (error) return next("ERROR :", error)
+                                if (error) return next(error)
 
                                 const token = jwt.sign(user, config.get('jwtSecret'))
                                 return res.json({token, id: user.id})

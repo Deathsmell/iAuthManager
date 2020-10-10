@@ -17,6 +17,9 @@ const UserToolbar = () => {
     useEffect(() => {
         if (selectedUser && selectedUser.length)
             setBlocked(selectedUser.filter(isBlock).length)
+        return () => {
+            setBlocked(0)
+        }
     }, [selectedUser])
 
 
