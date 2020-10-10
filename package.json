@@ -6,9 +6,10 @@
   "scripts": {
     "start": "node app.js",
     "server:dev": "nodemon node app.js",
-    "client:build": "yarn --cwd ./client build",
     "client:start": "yarn --cwd ./client start ",
-    "dev": "concurrently \"yarn client:start\" \"yarn server:dev -cwd client\""
+    "client:build": "yarn --cwd ./client build",
+    "dev": "concurrently \"yarn client:start\" \"yarn server:dev -cwd client\"",
+    "heroku": "yarn install && yarn --cwd ./client install && yarn client:build"
   },
   "dependencies": {
     "bcrypt": "^5.0.0",

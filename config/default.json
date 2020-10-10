@@ -3,7 +3,7 @@
   "jwtSecret": "deathsmellSecret",
   "eraseDatabaseOnSync": true,
   "database": {
-    "uri": "postgres://deathsmell:localhost:5432/iauthmanager",
+    "uri": "postgres://localhost:5432/iauthmanager",
     "host": "localhost",
     "user": "deathsmell",
     "password": "123",

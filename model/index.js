@@ -2,7 +2,7 @@ const {Sequelize, DataTypes} = require('sequelize')
 const config = require('config');
 
 const sequelize = new Sequelize(
-    process.env.DATABASE_URL || 'postgres://localhost:5432/iauthmanager',
+    process.env.DATABASE_URL || config.get('database').uri,
     {
         dialect: 'postgres',
     },
