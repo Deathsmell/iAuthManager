@@ -4,12 +4,13 @@
   "main": "app.js",
   "license": "MIT",
   "scripts": {
-    "start": "cross-env NODE_ENV=production node app.js",
-    "server": "nodemon node app.js",
+    "start": "yarn client:build && yarn server:prod",
+    "server:prod": "nodemon node app.js",
+    "server:dev": "cd .. && node app.js",
     "client": "cd ./client && yarn start",
     "client:install": "cd ./client && yarn install",
     "client:build": "cd ./client && yarn build",
-    "dev": "cross-env NODE_ENV=development concurrently \"yarn server\" \"yarn client\""
+    "dev": "cross-env \"NODE_ENV=development concurrently\" && \"yarn server\" \"yarn client\""
   },
   "dependencies": {
     "bcrypt": "^5.0.0",

@@ -1,4 +1,4 @@
-import React, {useCallback, useContext} from "react";
+import React, {useCallback} from "react";
 import moment from "moment";
 
 
@@ -18,7 +18,7 @@ const UserCell = ({user}) => {
         } else {
             return value
         }
-    }, [user])
+    }, [user,fixDate])
 
     return (
         Object.entries(user).map(([fieldName, value], index) => {
