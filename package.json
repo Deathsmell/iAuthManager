@@ -1,15 +1,12 @@
 {
-  "name": "iAuthManager",
+  "name": "iauthmanager",
   "version": "1.0.0",
   "main": "app.js",
   "license": "MIT",
   "scripts": {
-    "start": "yarn client:build && yarn server:dev",
+    "start": "node app.js",
     "server:prod": "nodemon node app.js",
-    "server:dev": "cd .. && node app.js",
-    "client": "cd ./client && yarn start",
-    "client:install": "cd ./client && yarn install",
-    "client:build": "cd ./client && yarn build",
+    "client:build": "yarn build --cwd ./client",
     "dev": "cross-env \"NODE_ENV=development concurrently\" && \"yarn server\" \"yarn client\""
   },
   "dependencies": {
